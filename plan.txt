@@ -1,0 +1,145 @@
+// **Portfolio website requirements for a recent BS CS graduate targeting junior software developer / engineer roles**
+
+// ---
+
+// ## 1. Core structure (non-negotiable)
+
+// ### Home
+
+// * Name
+// * Role target: *Junior Software Engineer* or *Junior Software Developer*
+// * One-line technical focus (e.g., backend, full-stack, systems, ML)
+// * Immediate links to:
+
+//   * GitHub
+//   * LinkedIn
+// * No animations, no hero fluff, no personal slogans
+
+// ### Projects (most important section)
+
+// Minimum: **3 solid projects**
+
+// Each project must include:
+
+// * Problem statement (what real problem it solves)
+// * Tech stack (languages, frameworks, tools)
+// * Architecture overview (how components interact)
+// * Your specific contributions
+// * Tradeoffs and decisions
+// * Link to live demo **or** runnable instructions
+// * Link to GitHub repo
+
+// Disqualifiers:
+
+// * Tutorial clones with no modification
+// * Group projects without clear ownership
+// * Screenshots without explanation
+
+// ### Resume
+
+// * One-page PDF
+// * Downloadable
+// * Mirrors job-ready formatting
+// * Skills aligned with projects shown
+
+// ### Skills
+
+// Organized by category:
+
+// * Languages
+// * Frameworks
+// * Databases
+// * Tools
+// * Concepts (data structures, OS, networking, concurrency)
+
+// Only list what you can explain and defend.
+
+// ### About (short)
+
+// * Degree, graduation year
+// * Technical interests
+// * What you want to work on
+// * No personal life narrative
+
+// ---
+
+// ## 2. Project quality bar (this matters more than count)
+
+// At least one project should demonstrate:
+
+// * Backend logic (APIs, auth, persistence)
+// * Data modeling
+// * Error handling
+// * Testing
+// * Deployment
+
+// Strong examples:
+
+// * REST API with auth and role separation
+// * Full-stack CRUD app with real constraints
+// * Compiler, interpreter, or systems project
+// * Distributed or concurrent system
+// * Performance-focused or low-level work
+
+// Weak examples:
+
+// * Static sites
+// * Simple to-do apps
+// * Calculator games
+// * UI-only demos
+
+// ---
+
+// ## 3. Engineering signals recruiters look for
+
+// Your site must show:
+
+// * Ability to reason about systems
+// * Ability to communicate technical decisions
+// * Ability to finish and ship
+// * Ability to read and write real codebases
+
+// How this shows up:
+
+// * Clear README files
+// * Consistent commit history on GitHub
+// * Thoughtful naming and structure
+// * No broken links
+// * No dead demos
+
+// ---
+
+// ## 4. Technical expectations for the website itself
+
+// * Fast load
+// * Mobile readable
+// * HTTPS
+// * Clean URLs
+// * No JS frameworks unless justified
+// * Hosted (GitHub Pages, Vercel, Netlify)
+
+// The website is not the product. It is a signal.
+
+// ---
+
+// ## 5. Optional but high-leverage additions
+
+// * Blog posts explaining a project or concept
+// * Case study breakdowns
+// * Link to LeetCode or similar only if actively strong
+// * Small open-source contributions
+
+// ---
+
+// ## 6. What actively hurts you
+
+// * “Passionate” language
+// * Buzzwords without evidence
+// * Long autobiographies
+// * Overdesigned UI
+// * Unfinished projects
+// * Listing every class you took
+
+// ---
+
+// **Rule**: If an interviewer can’t ask a deep technical question from your portfolio in under 30 seconds, it is failing its purpose.
