@@ -1,78 +1,70 @@
-import { ReactNode } from "react";
-import { Accordion, AccordionGroup } from "./Accordion";
 import { Link } from "react-aria-components";
 import { FaGithub } from "react-icons/fa";
 import { MdOutlineComputer } from "react-icons/md";
+import { Accordion } from "./Accordion";
+import { Project } from "@/types";
+import { AccordionGroup } from "./AccordionGroup";
 
-export type ProjectDescription = {
-  problemStatement: ReactNode;
-  techstack: ReactNode;
-  architecture: ReactNode;
-  decisions: ReactNode;
-};
-
-export type Project = {
-  thumbnail?: ReactNode | null;
-  title: string;
-  description: ProjectDescription;
-  githubLink: string;
-  demolink: string;
-};
-
-export function ProjectCard({
-  thumbnail = null,
-  title,
-  description,
-  githubLink,
-  demolink,
-}: Project) {
-  const repoUrl = `https://github.com/EmmanuelAbebe/${githubLink}`;
-
+export function ProjectCard({ project }: { project: Project }) {
   return (
-    <div className="flex flex-col md:flex-row gap-6 mx-auto">
-      <div className="border border-slate-600/20 rounded-md w-full max-w-[320px] aspect-square p-2 flex">
-        {thumbnail ? (
-          <div className="m-auto">{thumbnail}</div>
+    <div className="flex flex-col md:flex-row p-3 pb-3 md:pb-0 gap-6 mx-auto">
+      <div className="aspect-square w-75 h-75 p-2 bg-blue-300 rounded-2xl hidden md:flex">
+        {project.media?.thumbnail ? (
+          <img
+            src={project.media.thumbnail}
+            alt={project.title}
+            className="m-auto max-h-full max-w-full object-contain rounded-xl"
+          />
         ) : (
-          <p className="font-mono m-auto">Demo-thumbnail</p>
+          <p className="font-mono m-auto font-bold">Demo-thumbnail</p>
         )}
       </div>
 
-      <div className="flex flex-col gap-2">
-        <p className="font-mono text-lg font-bold">{title}</p>
-        <div className="font-mono text-xs wrap-break-word whitespace-normal max-w-md">
-          <div className="ps-2 flex flex-col gap-2 ">
+      <div className="flex flex-col gap-2 min-w-0">
+        <p className="font-mono text-lg font-bold">{project.title}</p>
+        <p className="font-mono text-sm">{project.oneLiner}</p>
+
+        <ul className="font-mono text-xs list-disc ps-15 whitespace-normal wrap-break-word max-w-md">
+          {project.highlights.map((h) => (
+            <li key={h}>{h}</li>
+          ))}
+        </ul>
+
+        {project.details && (
+          <div className="mt-2">
             <AccordionGroup defaultOpenKey="stack">
-              <Accordion
-                itemKey="problem-statement"
-                heading={"problem statement"}
-              >
-                <div>{description.problemStatement}</div>
+              <Accordion itemKey="problem" heading="problem">
+                <p className="font-mono text-xs whitespace-normal wrap-break-word">
+                  {project.details.problem ?? ""}
+                </p>
               </Accordion>
-              <Accordion
-                itemKey="stack"
-                heading={"tech stack (languages, frameworks, tools)"}
-              >
-                <div>{description.techstack}</div>
+              <Accordion itemKey="arch" heading="architecture">
+                <p className="font-mono text-xs whitespace-normal wrap-break-word">
+                  {project.details.architecture ?? ""}
+                </p>
               </Accordion>
-              <Accordion
-                itemKey="arch"
-                heading={"architecture overview (how components interact)"}
-              >
-                <div>{description.architecture}</div>
+              <Accordion itemKey="decisions" heading="decisions">
+                <ul className="font-mono text-xs list-disc ps-5">
+                  {(project.details.decisions ?? []).map((d) => (
+                    <li key={d}>{d}</li>
+                  ))}
+                </ul>
               </Accordion>
-              <Accordion
-                itemKey="decisions"
-                heading={"tradeoffs and decisions"}
-              >
-                <div>{description.decisions}</div>
+              <Accordion itemKey="stack" heading="stack">
+                <ul className="font-mono text-xs list-disc ps-5">
+                  {project.stack.map((s) => (
+                    <li key={s}>{s}</li>
+                  ))}
+                </ul>
               </Accordion>
             </AccordionGroup>
           </div>
+        )}
 
-          <div className="p-2 mt-5 flex flex-row gap-5">
+        <div className="p-2 mt-3 flex flex-row gap-5">
+          {project.links.repo && (
             <Link
-              href={repoUrl}
+              href={project.links.repo}
               className="flex gap-2 items-center hover:underline"
               target="_blank"
               rel="noreferrer"
@@ -80,17 +72,19 @@ export function ProjectCard({
               <FaGithub size={12} />
               source code <span className="sr-only">(opens in a new tab)</span>
             </Link>
+          )}
+          {project.links.demo && (
             <Link
-              href={demolink}
+              href={project.links.demo}
               className="flex gap-2 items-center hover:underline"
               target="_blank"
               rel="noreferrer"
             >
               <MdOutlineComputer size={12} />
-              live demo site
+              live demo site{" "}
               <span className="sr-only">(opens in a new tab)</span>
             </Link>
-          </div>
+          )}
         </div>
       </div>
     </div>

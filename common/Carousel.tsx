@@ -1,80 +1,45 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+"use client";
+
+import { CarouselProps } from "@/types";
+import React, { useEffect, useMemo, useId, useState } from "react";
 import { Button } from "react-aria-components";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
-
-export type CarouselProps<T> = {
-  items: T[];
-  render: (item: T) => React.ReactNode;
-  ariaLabel?: string;
-
-  // optional: show controls only on this section
-  sectionIdToShowControls?: string; // e.g. "projects"
-  scrollRootId?: string; // e.g. "snap-root"
-};
 
 export function Carousel<T>({
   items,
   render,
   ariaLabel = "Projects carousel",
-  sectionIdToShowControls = "projects",
-  scrollRootId = "snap-root",
+  controlsVisible,
 }: CarouselProps<T>) {
-  const [index, setIndex] = useState(0);
-  const [barVisible, setBarVisible] = useState(false);
+  const [index, setIndex] = useState<number>(0);
 
-  const count = items.length;
-  const trackId = useRef(
-    `carousel-track-${Math.random().toString(36).slice(2)}`
-  ).current;
-  const liveId = useRef(
-    `carousel-live-${Math.random().toString(36).slice(2)}`
-  ).current;
+  const visible: boolean = controlsVisible ?? true;
+  const count: number = items.length;
 
-  const clamp = (n: number) => {
+  const uid = useId();
+  const trackId = `carousel-track-${uid}`;
+  const liveId = `carousel-live-${uid}`;
+
+  const clamp = (n: number): number => {
     if (count === 0) return 0;
     return ((n % count) + count) % count;
   };
 
-  const prev = () => setIndex((i) => clamp(i - 1));
-  const next = () => setIndex((i) => clamp(i + 1));
-  const goTo = (i: number) => setIndex(clamp(i));
+  const prev = (): void => setIndex((i) => clamp(i - 1));
+  const next = (): void => setIndex((i) => clamp(i + 1));
+  const goTo = (i: number): void => setIndex(clamp(i));
 
   useEffect(() => {
     setIndex((i) => clamp(i));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [count]);
 
-  const trackStyle = useMemo(
+  const trackStyle = useMemo<React.CSSProperties>(
     () => ({ transform: `translateX(-${index * 100}%)` }),
     [index]
   );
 
-  // Show/hide bottom controls only while a specific section is “active” in the snap scroller.
-  useEffect(() => {
-    const root = document.getElementById(scrollRootId);
-    const target = document.getElementById(sectionIdToShowControls);
-
-    if (!root || !target) {
-      setBarVisible(true); // fail open (keeps controls discoverable)
-      return;
-    }
-
-    const io = new IntersectionObserver(
-      ([entry]) => setBarVisible(entry.isIntersecting),
-      {
-        root,
-        threshold: 0.35,
-        rootMargin: "-120px 0px 0px 0px", // header height compensation
-      }
-    );
-
-    io.observe(target);
-    return () => io.disconnect();
-  }, [scrollRootId, sectionIdToShowControls]);
-
-  if (count === 0) return null;
-
-  const slideLabel = `Slide ${index + 1} of ${count}`;
+  const slideLabel = `Slide ${count === 0 ? 0 : index + 1} of ${count}`;
 
   return (
     <div
@@ -85,18 +50,17 @@ export function Carousel<T>({
       aria-describedby={liveId}
       tabIndex={0}
     >
-      {/* Live region announcement for screen readers */}
       <p id={liveId} className="sr-only" aria-live="polite" aria-atomic="true">
         {slideLabel}
       </p>
 
-      <div className="overflow-hidden">
+      <div className="overflow-x-hidden">
         <div
           id={trackId}
-          className="flex transition-transform duration-300 ease-in-out motion-reduce:transition-none"
+          className="flex transition-transform duration-500 ease-in-out motion-reduce:transition-none"
           style={trackStyle}
         >
-          {items.map((item, i) => {
+          {items.map((item: T, i: number) => {
             const isActive = i === index;
             return (
               <div
@@ -115,31 +79,31 @@ export function Carousel<T>({
         </div>
       </div>
 
-      {/* Keep controls in the DOM for discoverability; disable when “not active section” */}
       <div
-        className={[
-          "fixed bottom-0 left-0 right-0 z-50 m-4 flex items-center justify-center gap-8 py-6",
-          barVisible ? "" : "invisible pointer-events-none",
-        ].join(" ")}
-        aria-hidden={!barVisible}
+        className={
+          visible
+            ? "sticky bottom-0 left-0 right-0 z-50 m-4 flex items-center justify-center gap-8 py-6"
+            : "hidden"
+        }
+        aria-hidden={!visible}
       >
         <Button
           type="button"
-          className="p-2"
+          className="p-2 me-2"
           onPress={prev}
           aria-label="Previous slide"
           aria-controls={trackId}
-          isDisabled={!barVisible}
+          isDisabled={!visible || count <= 1}
         >
           <FaChevronLeft size={16} className="hover:text-amber-600" />
         </Button>
 
         <div
-          className="flex flex-row items-center gap-5"
+          className="flex flex-row items-center"
           role="tablist"
           aria-label="Choose slide"
         >
-          {items.map((_, i) => {
+          {items.map((_: T, i: number) => {
             const selected = i === index;
             return (
               <Button
@@ -150,11 +114,13 @@ export function Carousel<T>({
                 aria-controls={trackId}
                 aria-current={selected ? "true" : undefined}
                 className={[
-                  "border transition-all duration-300 motion-reduce:transition-none",
-                  "h-3 w-3 rounded-[90%_60%_80%_10%]",
-                  selected ? "opacity-100 h-4.5 w-4.5 bg-black" : "opacity-40",
+                  "transition-all duration-700 motion-reduce:transition-none outline-none",
+                  "h-3.5 w-3.5 rounded-full mx-2",
+                  selected
+                    ? "opacity-100 h-5 w-5 bg-blue-400"
+                    : "opacity-40 bg-gray-400 hover:opacity-80",
                 ].join(" ")}
-                isDisabled={!barVisible}
+                isDisabled={!visible || count <= 1}
               />
             );
           })}
@@ -162,11 +128,11 @@ export function Carousel<T>({
 
         <Button
           type="button"
-          className="p-2"
+          className="p-2 ms-2"
           onPress={next}
           aria-label="Next slide"
           aria-controls={trackId}
-          isDisabled={!barVisible}
+          isDisabled={!visible || count <= 1}
         >
           <FaChevronRight size={16} className="hover:text-amber-600" />
         </Button>
