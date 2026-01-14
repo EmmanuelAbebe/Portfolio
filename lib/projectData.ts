@@ -40,23 +40,26 @@ export const projects: Project[] = [
   },
 
   {
-    slug: "project-2",
-    title: "Project Two",
+    slug: "Reservation-App",
+    title: "Reservation Web App",
     oneLiner: "A brief description of project two.",
-    stack: ["Tech1", "Tech2", "Tech3"],
+    stack: ["Next.js", "TypeScript", "Tailwind CSS"],
     highlights: [
-      "Highlight one of project two.",
-      "Highlight two of project two.",
-      "Highlight three of project two.",
+      "Modern UI/UX design for seamless user experience.",
+      "Form validation and error handling implemented.",
+      "Admin dashboard for managing reservations.",
     ],
     links: {
-      demo: "https://example.com",
-      repo: "https://github.com/you/project-two",
+      demo: "https://github.com/EmmanuelAbebe/StudioReservation/",
+      repo: "https://studio-reservation-seven.vercel.app/",
     },
     details: {
-      problem: "Describe the problem solved by project two.",
-      architecture: "Describe the architecture of project two.",
-      decisions: ["Key decision one.", "Key decision two."],
+      problem: "Reserve a time and space efficiently.",
+      architecture: "frontend with Next.js and backend integration.",
+      decisions: [
+        "utilizing Prisma for data modeling",
+        "chose Next.js for SSR.",
+      ],
     },
     media: { thumbnail: "/images/project2.png" },
   },
