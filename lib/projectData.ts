@@ -50,8 +50,8 @@ export const projects: Project[] = [
       "Admin dashboard for managing reservations.",
     ],
     links: {
-      demo: "https://github.com/EmmanuelAbebe/StudioReservation/",
-      repo: "https://studio-reservation-seven.vercel.app/",
+      demo: "https://studio-reservation-seven.vercel.app/",
+      repo: "https://github.com/EmmanuelAbebe/StudioReservation/",
     },
     details: {
       problem: "Reserve a time and space efficiently.",
