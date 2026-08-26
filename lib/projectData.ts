@@ -64,25 +64,29 @@ export const projects: Project[] = [
     media: { thumbnail: "/images/project2.png" },
   },
   {
-    slug: "project-3",
-    title: "Project Three",
-    oneLiner: "A brief description of project three.",
-    stack: ["Tech1", "Tech2", "Tech3"],
+    slug: "AI Chess app",
+    title: "AI Chess app",
+    oneLiner: "An AI-powered chess application with real-time gameplay.",
+    stack: ["React", "TypeScript", "Node.js", "TensorFlow.js"],
     highlights: [
-      "Highlight one of project three.",
-      "Highlight two of project three.",
-      "Highlight three of project three.",
+      "Implemented AI opponent with neural network training.",
+      "Built real-time multiplayer chess experience.",
+      "Integrated responsive UI with smooth animations.",
     ],
     links: {
-      demo: "https://example.com",
-      repo: "https://github.com/you/project-three",
+      demo: "https://chessapp-five.vercel.app/",
+      repo: "https://github.com/EmmanuelAbebe/chessapp",
     },
     details: {
-      problem: "Describe the problem solved by project three.",
-      architecture: "Describe the architecture of project three.",
-      decisions: ["Key decision one.", "Key decision two."],
+      problem: "Create an engaging chess experience with intelligent AI.",
+      architecture:
+        "Frontend with React and TypeScript, backend with Node.js and TensorFlow.js.",
+      decisions: [
+        "Chose React for its component-based architecture.",
+        "Utilized TensorFlow.js for on-device machine learning.",
+      ],
     },
-    media: { thumbnail: "/images/project3.png" },
+    media: { thumbnail: "/images/ai-chess.png" },
   },
 ];
 
