@@ -53,7 +53,7 @@ export default function Home() {
     <div className="min-h-svh">
       <Header active={active} sections={SECTIONS} onNav={onNav} />
 
-      <main className="px-4 mx-0 md:px-16 md:mx-16 pb-16">
+      <main className="container pb-16">
         <Section id="about">
           <About />
         </Section>

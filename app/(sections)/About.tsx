@@ -161,6 +161,22 @@ export default function About() {
             PostgreSQL).
           </span>
         </div>
+        <div className="text-sm flex-wrap leading-7 text-slate-700 py-2 flex gap-2">
+          <span className="font-mono text-sm font-semibold text-indigo-500">
+            What I want to work on
+          </span>
+          <ul className="w-full ps-12 list-disc space-y-1">
+            <li>
+              AI features backed by reliable logic, where the model explains or
+              assists but deterministic code makes the decisions.
+            </li>
+            <li>
+              Products with real-world constraints: scheduling, availability,
+              payments, and data that has to stay consistent.
+            </li>
+            <li>Clean, fast interfaces that make complex workflows simple.</li>
+          </ul>
+        </div>
       </div>
 
       {/* Skills */}
