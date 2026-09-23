@@ -27,6 +27,7 @@ import {
   SiTailwindcss,
   SiVercel,
   SiStripe,
+  SiClaude,
 } from "react-icons/si";
 
 type Skill = {
@@ -86,18 +87,17 @@ const GROUPS: Group[] = [
       { label: "Linux", Icon: FaLinux },
       { label: "Docker", Icon: FaDocker },
       { label: "Vercel", Icon: SiVercel },
+      { label: "Claude Code", Icon: SiClaude, note: "AI pair programming" },
     ],
   },
 ];
 
 function SkillPill({ label, Icon, emphasis, note }: Skill) {
-  const iconClass = emphasis
-    ? "text-indigo-600"
-    : "text-slate-400 group-hover:text-indigo-600";
+  // Static labels, so no hover styling that would suggest they're clickable.
+  const iconClass = emphasis ? "text-indigo-600" : "text-slate-400";
 
   const pillClass =
-    "group inline-flex items-center gap-2 rounded-md border border-slate-200 bg-white px-3 py-2 " +
-    "transition-colors duration-150 hover:border-indigo-300";
+    "inline-flex items-center gap-2 rounded-md border border-slate-200 bg-white px-3 py-2";
 
   return (
     <div className={pillClass} title={note ?? label} aria-label={label}>
@@ -118,7 +118,7 @@ export default function About() {
           rel="noreferrer"
         >
           <FaGithub size={16} />
-          <p className="text-sm font-mono font-light">
+          <p className="text-sm font-mono">
             github.com/EmmanuelAbebe
           </p>
         </a>
@@ -129,7 +129,7 @@ export default function About() {
           rel="noreferrer"
         >
           <FaLinkedin size={16} />
-          <p className="text-sm font-mono font-light">
+          <p className="text-sm font-mono">
             linkedin.com/in/emmanuel-abebe-50554bb2
           </p>
         </a>
@@ -137,23 +137,25 @@ export default function About() {
 
       {/* Summary */}
       <div className="space-y-3">
-        <p className="font-mono text-sm leading-6 text-slate-700">
+        <p className="text-base leading-7 text-slate-700">
           Junior software engineer building full-stack TypeScript apps: Next.js
           front ends, typed API routes, PostgreSQL schemas, and auth.
         </p>
-        <ul className="font-mono text-sm leading-6 list-disc text-slate-700 ps-5 space-y-3">
-          <li className="m-1 p-2">
+        <ul className="text-base leading-7 list-disc text-slate-700 ps-5 space-y-1">
+          <li className="p-1">
             Latest project: an AI chess coach that runs Stockfish in the
             browser, explains mistakes with an LLM, and profiles players with
             a Python ML pipeline.
           </li>
-          <li className="m-1 p-2">
+          <li className="p-1">
             Built booking systems with availability logic, double-booking
             prevention, role-based admin dashboards, and Stripe payments.
           </li>
         </ul>
-        <div className="font-mono text-sm flex-wrap leading-6 text-slate-700 py-2 flex gap-2">
-          <span className="font-semibold text-indigo-500">Target roles</span>
+        <div className="text-base flex-wrap leading-7 text-slate-700 py-2 flex gap-2">
+          <span className="font-mono text-sm font-semibold text-indigo-500">
+            Target roles
+          </span>
           <span className="w-full ps-8">
             Junior full-stack or frontend engineer (React, Next.js, TypeScript,
             PostgreSQL).
@@ -189,7 +191,7 @@ export default function About() {
         <p className="font-mono font-semibold border-b border-gray-300 py-2 text-slate-900">
           Education
         </p>
-        <div className="font-mono text-sm leading-6 text-slate-700 ps-8">
+        <div className="text-base leading-7 text-slate-700 ps-8">
           <p className="font-semibold">B.S. Computer Science, 2025</p>
           <p>University of Maryland Global Campus</p>
         </div>

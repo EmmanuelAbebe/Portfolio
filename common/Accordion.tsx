@@ -19,7 +19,7 @@ export function Accordion({
       <button
         type="button"
         id={buttonId}
-        className="flex items-center gap-2 font-mono text-left w-full hover:underline hover:font-bold focus-visible:outline-2 focus-visible:outline-offset-2"
+        className="flex items-center gap-2 font-mono text-left w-full hover:underline focus-visible:outline-2 focus-visible:outline-offset-2"
         aria-expanded={isOpen}
         aria-controls={panelId}
         onClick={() => onToggle?.()}

@@ -28,7 +28,7 @@ export type AccordionGroupProps = {
 
 export type SectionProps = {
   id: string;
-  title: string;
+  title?: string; // omitted where the header already names the section
   className?: string;
   children: ReactNode;
 };

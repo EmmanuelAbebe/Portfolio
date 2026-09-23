@@ -16,7 +16,7 @@ type Props = {
 
 export default function SiteHeader({ active, sections, onNav }: Props) {
   return (
-    <header className="sticky top-0 z-50 bg-white/10 backdrop-blur px-8 pt-4 md:px-30 md:pt-10">
+    <header className="sticky top-0 z-50 bg-white px-8 pt-4 md:px-30 md:pt-8">
       <div className="border-b pb-3">
         <div className="flex items-end justify-between">
           <div
@@ -24,15 +24,15 @@ export default function SiteHeader({ active, sections, onNav }: Props) {
               active != "about" ? "flex-row" : "flex-col"
             }`}
           >
-            <p
+            <h1
               className={`font-mono uppercase transition-all duration-300 delay-100 ${
                 active != "about"
                   ? "text-[14px] font-semibold"
-                  : "text-4xl font-bold "
+                  : "text-2xl md:text-4xl font-bold"
               }`}
             >
               Emmanuel&middot;Abebe
-            </p>
+            </h1>
             <span
               className={`transition-all duration-300 delay-100 ${
                 active != "about" ? "" : "hidden"
@@ -46,7 +46,7 @@ export default function SiteHeader({ active, sections, onNav }: Props) {
           </div>
         </div>
 
-        <nav className="font-mono text-sm flex items-center gap-3 mt-5">
+        <nav className="font-mono text-sm flex items-center gap-3 mt-3 md:mt-5">
           {sections.map((s, i) => (
             <span key={s.id} className="flex items-center gap-0.5">
               <Link

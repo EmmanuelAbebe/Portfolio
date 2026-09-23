@@ -32,8 +32,10 @@ export default function Home() {
       },
       {
         root: null,
+        // A section is "active" while it crosses a thin band at mid-screen.
+        // threshold 0 so tall sections still register (their ratio stays tiny).
         rootMargin: "-45% 0px -45% 0px",
-        threshold: [0.1, 0.25, 0.5, 0.75],
+        threshold: 0,
       }
     );
 
@@ -48,16 +50,11 @@ export default function Home() {
   };
 
   return (
-    <div
-      id="snap-root"
-      role="region"
-      aria-label="Main content"
-      className="min-h-svh scroll-smooth scroll-pt-30"
-    >
+    <div className="min-h-svh">
       <Header active={active} sections={SECTIONS} onNav={onNav} />
 
-      <main className="px-4 mx-0 md:px-16 md:mx-16">
-        <Section id="about" title="About">
+      <main className="px-4 mx-0 md:px-16 md:mx-16 pb-16">
+        <Section id="about">
           <About />
         </Section>
 

@@ -9,7 +9,7 @@ export const projects: Project[] = [
     title: "CoachMeChess — AI Chess Coach",
     oneLiner:
       "Stockfish finds the mistake; an LLM explains why, using the player's own game history.",
-    note: "In active development; the most complete of my projects.",
+    note: "In active development; the most complete of my projects. Built with Claude Code as an AI pair programmer.",
     stack: [
       "Next.js (App Router)",
       "TypeScript",

@@ -23,10 +23,10 @@ export function ProjectCard({ project }: { project: Project }) {
 
       <div className="flex flex-col gap-3 min-w-0 max-w-3xl">
         <h3 className="font-mono text-lg font-bold">{project.title}</h3>
-        <p className="font-mono text-sm">{project.oneLiner}</p>
+        <p className="text-base text-slate-800">{project.oneLiner}</p>
 
         {project.note && (
-          <p className="font-mono text-xs text-slate-500 italic">{project.note}</p>
+          <p className="text-sm text-slate-500 italic">{project.note}</p>
         )}
 
         <ul className="flex flex-wrap gap-2" aria-label="Tech stack">
@@ -40,7 +40,7 @@ export function ProjectCard({ project }: { project: Project }) {
           ))}
         </ul>
 
-        <ul className="font-mono text-xs leading-5 list-disc ps-5 space-y-1 wrap-break-word">
+        <ul className="text-sm leading-6 text-slate-700 list-disc ps-5 space-y-1 wrap-break-word">
           {project.highlights.map((h) => (
             <li key={h}>{h}</li>
           ))}
@@ -50,17 +50,17 @@ export function ProjectCard({ project }: { project: Project }) {
           <div className="mt-1">
             <AccordionGroup defaultOpenKey="problem">
               <Accordion itemKey="problem" heading="problem">
-                <p className="font-mono text-xs leading-5 whitespace-normal wrap-break-word">
+                <p className="text-sm leading-6 text-slate-700 whitespace-normal wrap-break-word">
                   {project.details.problem ?? ""}
                 </p>
               </Accordion>
               <Accordion itemKey="arch" heading="architecture">
-                <p className="font-mono text-xs leading-5 whitespace-normal wrap-break-word">
+                <p className="text-sm leading-6 text-slate-700 whitespace-normal wrap-break-word">
                   {project.details.architecture ?? ""}
                 </p>
               </Accordion>
               <Accordion itemKey="decisions" heading="decisions & tradeoffs">
-                <ul className="font-mono text-xs leading-5 list-disc ps-5 space-y-1">
+                <ul className="text-sm leading-6 text-slate-700 list-disc ps-5 space-y-1">
                   {(project.details.decisions ?? []).map((d) => (
                     <li key={d}>{d}</li>
                   ))}

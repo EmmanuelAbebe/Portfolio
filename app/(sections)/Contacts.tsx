@@ -1,9 +1,9 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { FaCheckCircle, FaExclamationCircle } from "react-icons/fa";
 import { RiSendPlaneFill } from "react-icons/ri";
-import { Turnstile } from "@marsidev/react-turnstile";
+import { Turnstile, type TurnstileInstance } from "@marsidev/react-turnstile";
 
 import {
   validateContactForm,
@@ -35,6 +35,7 @@ export default function Contacts() {
 
   // turnstile
   const [tsToken, setTsToken] = useState("");
+  const turnstileRef = useRef<TurnstileInstance>(undefined);
   const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? "";
 
   // controlled inputs
@@ -109,7 +110,9 @@ export default function Contacts() {
       setContact("");
       setMessage("");
       setCompany("");
+      // Tokens are single-use: get a fresh one in case they send another.
       setTsToken("");
+      turnstileRef.current?.reset();
       setTouched({ name: false, contact: false, message: false });
     } catch {
       setStatus("error");
@@ -121,7 +124,7 @@ export default function Contacts() {
     <div className="flex flex-col">
       {/* Form */}
       <div className="flex-1 min-w-0 md:max-w-180">
-        <p className="font-mono text-sm text-slate-700 pb-6 mb-3">
+        <p className="text-base text-slate-700 mb-6">
           Send me a message and I&apos;ll get back to you.
         </p>
 
@@ -173,13 +176,14 @@ export default function Contacts() {
           {/* Turnstile */}
           <div className="pt-2">
             <Turnstile
+              ref={turnstileRef}
               siteKey={siteKey}
               onSuccess={setTsToken}
               onExpire={() => setTsToken("")}
               onError={() => setTsToken("")}
             />
-            {errors.turnstile && (
-              <p className="text-xs text-red-600 font-mono mt-1">
+            {submitted && status !== "sent" && errors.turnstile && (
+              <p className="text-xs text-red-600 mt-1">
                 {errors.turnstile}
               </p>
             )}
@@ -187,14 +191,14 @@ export default function Contacts() {
 
           {/* Status */}
           {submitted && status === "sent" && (
-            <p className="text-green-600 font-mono text-sm">
+            <p className="text-green-600 text-sm">
               <FaCheckCircle className="inline me-2" />
               Message sent
             </p>
           )}
 
           {submitted && status === "error" && (
-            <p className="text-red-600 font-mono text-sm">
+            <p className="text-red-600 text-sm">
               <FaExclamationCircle className="inline me-2" />
               {ERROR_MESSAGES[errorMsg] ?? FALLBACK_ERROR}
             </p>
@@ -255,7 +259,7 @@ function Field({
         disabled={disabled}
         placeholder={placeholder}
         aria-invalid={!!error}
-        className={`border p-3 text-sm w-full font-mono focus:outline-2 ${
+        className={`border p-3 text-sm w-full focus:outline-2 ${
           error
             ? "border-red-500 focus:outline-red-500"
             : "border-gray-300 focus:outline-indigo-500"
@@ -296,7 +300,7 @@ function TextArea({
         disabled={disabled}
         placeholder={placeholder}
         aria-invalid={!!error}
-        className={`border p-3 text-sm w-full font-mono focus:outline-2 resize-y ${
+        className={`border p-3 text-sm w-full focus:outline-2 resize-y ${
           error
             ? "border-red-500 focus:outline-red-500"
             : "border-gray-300 focus:outline-indigo-500"
