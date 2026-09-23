@@ -1,13 +1,14 @@
 @import "tailwindcss";
 
-/* Sans for reading, mono for accents (name, headings, nav, tags). */
+/* Monospace throughout is a deliberate design choice. */
 @theme inline {
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
 body {
-  font-family: var(--font-sans);
+  /* --font-geist-* are set on <body> by next/font, so reference them here. */
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
   background: #ffffff;
   color: #0f172a;
 }

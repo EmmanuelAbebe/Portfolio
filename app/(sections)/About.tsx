@@ -137,11 +137,11 @@ export default function About() {
 
       {/* Summary */}
       <div className="space-y-3">
-        <p className="text-base leading-7 text-slate-700">
+        <p className="text-sm leading-7 text-slate-700">
           Junior software engineer building full-stack TypeScript apps: Next.js
           front ends, typed API routes, PostgreSQL schemas, and auth.
         </p>
-        <ul className="text-base leading-7 list-disc text-slate-700 ps-5 space-y-1">
+        <ul className="text-sm leading-7 list-disc text-slate-700 ps-5 space-y-1">
           <li className="p-1">
             Latest project: an AI chess coach that runs Stockfish in the
             browser, explains mistakes with an LLM, and profiles players with
@@ -152,7 +152,7 @@ export default function About() {
             prevention, role-based admin dashboards, and Stripe payments.
           </li>
         </ul>
-        <div className="text-base flex-wrap leading-7 text-slate-700 py-2 flex gap-2">
+        <div className="text-sm flex-wrap leading-7 text-slate-700 py-2 flex gap-2">
           <span className="font-mono text-sm font-semibold text-indigo-500">
             Target roles
           </span>
@@ -191,7 +191,7 @@ export default function About() {
         <p className="font-mono font-semibold border-b border-gray-300 py-2 text-slate-900">
           Education
         </p>
-        <div className="text-base leading-7 text-slate-700 ps-8">
+        <div className="text-sm leading-7 text-slate-700 ps-8">
           <p className="font-semibold">B.S. Computer Science, 2025</p>
           <p>University of Maryland Global Campus</p>
         </div>

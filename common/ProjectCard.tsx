@@ -23,7 +23,7 @@ export function ProjectCard({ project }: { project: Project }) {
 
       <div className="flex flex-col gap-3 min-w-0 max-w-3xl">
         <h3 className="font-mono text-lg font-bold">{project.title}</h3>
-        <p className="text-base text-slate-800">{project.oneLiner}</p>
+        <p className="text-sm leading-6 text-slate-800">{project.oneLiner}</p>
 
         {project.note && (
           <p className="text-sm text-slate-500 italic">{project.note}</p>

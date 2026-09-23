@@ -124,7 +124,7 @@ export default function Contacts() {
     <div className="flex flex-col">
       {/* Form */}
       <div className="flex-1 min-w-0 md:max-w-180">
-        <p className="text-base text-slate-700 mb-6">
+        <p className="text-sm text-slate-700 mb-6">
           Send me a message and I&apos;ll get back to you.
         </p>
 
