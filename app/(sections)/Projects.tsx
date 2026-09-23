@@ -1,15 +1,13 @@
-import { Carousel } from "@/common/Carousel";
 import { ProjectCard } from "@/common/ProjectCard";
 import { projects } from "@/lib/projectData";
-import { Project } from "@/types";
 
-export default function Projects({ active }: { active: boolean }) {
+// Stacked, not a carousel: every project is visible to someone skimming.
+export default function Projects() {
   return (
-    <Carousel
-      items={projects}
-      ariaLabel="Projects"
-      render={(project: Project) => <ProjectCard project={project} />}
-      controlsVisible={active}
-    />
+    <div className="flex flex-col gap-10">
+      {projects.map((project) => (
+        <ProjectCard key={project.slug} project={project} />
+      ))}
+    </div>
   );
 }

@@ -1,10 +1,10 @@
 import clsx from "clsx";
 import { BsPersonWorkspace } from "react-icons/bs";
-import { FaFile, FaCode } from "react-icons/fa";
+import { FaCode } from "react-icons/fa";
 import { LuMessageSquare } from "react-icons/lu";
 import { Link } from "react-aria-components";
 
-export type SectionId = "about" | "projects" | "resume" | "contacts";
+import type { SectionId } from "@/types";
 
 export type NavSection = { id: SectionId; label: string };
 
@@ -57,14 +57,10 @@ export default function SiteHeader({ active, sections, onNav }: Props) {
                   active === s.id &&
                     "underline font-semibold text-indigo-600/90"
                 )}
-                onPress={(e) => {
-                  //   e.preventDefault(); // stop default hash navigation
-                  onNav(s.id);
-                }}
+                onPress={() => onNav(s.id)}
               >
                 {s.id === "about" && <BsPersonWorkspace size={14} />}
                 {s.id === "projects" && <FaCode size={14} />}
-                {s.id === "resume" && <FaFile size={14} />}
                 {s.id === "contacts" && <LuMessageSquare size={14} />}
                 {s.label}
               </Link>

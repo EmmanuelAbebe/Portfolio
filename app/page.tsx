@@ -4,7 +4,6 @@ import { SectionId, SECTIONS } from "@/types";
 import { useEffect, useState } from "react";
 import { Section } from "@/common/Section";
 import Header from "@/common/Header";
-import Resume from "./(sections)/Resume";
 import Contacts from "./(sections)/Contacts";
 import Projects from "./(sections)/Projects";
 import About from "./(sections)/About";
@@ -63,11 +62,7 @@ export default function Home() {
         </Section>
 
         <Section id="projects" title="Projects">
-          <Projects active={active === "projects"} />
-        </Section>
-
-        <Section id="resume" title="Resume">
-          <Resume />
+          <Projects />
         </Section>
 
         <Section id="contacts" title="Contacts">

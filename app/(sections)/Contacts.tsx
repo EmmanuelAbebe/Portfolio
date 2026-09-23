@@ -1,12 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import {
-  FaCheckCircle,
-  FaEnvelope,
-  FaExclamationCircle,
-  FaPhone,
-} from "react-icons/fa";
+import { FaCheckCircle, FaExclamationCircle } from "react-icons/fa";
 import { RiSendPlaneFill } from "react-icons/ri";
 import { Turnstile } from "@marsidev/react-turnstile";
 
@@ -17,6 +12,19 @@ import {
 } from "@/lib/contactValidation";
 
 type Status = "idle" | "sending" | "sent" | "error";
+
+const ERROR_MESSAGES: Record<string, string> = {
+  fix_form_errors: "Please fix the highlighted fields.",
+  rate_limited: "Too many messages. Please wait a minute and try again.",
+  turnstile_failed: "Captcha check failed. Please retry it.",
+  missing_fields: "Please fill in every field.",
+  send_failed: "Your message couldn't be delivered. Please try again later.",
+  server_misconfigured: "The contact form isn't set up yet. Please reach me on LinkedIn.",
+  too_long: "Message is too long (5000 characters max).",
+  network_error: "Network error. Check your connection and try again.",
+};
+const FALLBACK_ERROR =
+  "Something went wrong. Please try again, or reach me on LinkedIn.";
 
 export default function Contacts() {
   const [status, setStatus] = useState<Status>("idle");
@@ -87,7 +95,9 @@ export default function Contacts() {
       });
 
       if (!res.ok) {
-        const data = (await res.json().catch(() => null)) as any;
+        const data = (await res.json().catch(() => null)) as {
+          error?: string;
+        } | null;
         setStatus("error");
         setErrorMsg(data?.error ?? "send_failed");
         return;
@@ -108,35 +118,12 @@ export default function Contacts() {
   }
 
   return (
-    <div className="flex flex-col xl:flex-row justify-center gap-16">
-      {/* Static contact info */}
-      <div className="flex-1 min-w-0 md:max-w-180">
-        <p className="font-mono text-lg pb-6 mb-3">Contact Information</p>
-        <ul className="font-medium ps-6 flex flex-col gap-2">
-          <li className="flex items-center gap-4">
-            <FaEnvelope size={16} />
-            <a
-              href="mailto:emmanuelmihret@gmail.com"
-              className="font-mono text-sm hover:underline"
-            >
-              emmanuelmihret@gmail.com
-            </a>
-          </li>
-          <li className="flex items-center gap-4">
-            <FaPhone size={14} />
-            <a
-              href="tel:+13018935021"
-              className="font-mono text-sm hover:underline"
-            >
-              +1 (301) 893-5021
-            </a>
-          </li>
-        </ul>
-      </div>
-
+    <div className="flex flex-col">
       {/* Form */}
       <div className="flex-1 min-w-0 md:max-w-180">
-        <p className="font-mono text-lg pb-6 mb-3">Contact me here</p>
+        <p className="font-mono text-sm text-slate-700 pb-6 mb-3">
+          Send me a message and I&apos;ll get back to you.
+        </p>
 
         <form className="flex flex-col gap-2" onSubmit={onSubmit} noValidate>
           {/* honeypot */}
@@ -209,7 +196,7 @@ export default function Contacts() {
           {submitted && status === "error" && (
             <p className="text-red-600 font-mono text-sm">
               <FaExclamationCircle className="inline me-2" />
-              {errorMsg}
+              {ERROR_MESSAGES[errorMsg] ?? FALLBACK_ERROR}
             </p>
           )}
 

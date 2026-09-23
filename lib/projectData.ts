@@ -1,168 +1,119 @@
-// import { Project } from "@/common/ProjectCard";
-
 import { Project } from "@/types";
 
 // lib/projectData.ts
+// Order: most complete first, then the live, most polished UI; recruiters often only read the first cards.
 
 export const projects: Project[] = [
   {
-    slug: "salon-booking",
-    title: "Booking & Management System",
+    slug: "coachmechess",
+    title: "CoachMeChess — AI Chess Coach",
     oneLiner:
-      "Role-based booking, schedules, and stylist galleries in one app.",
+      "Stockfish finds the mistake; an LLM explains why, using the player's own game history.",
+    note: "In active development; the most complete of my projects.",
     stack: [
       "Next.js (App Router)",
       "TypeScript",
-      "Prisma",
-      "PostgreSQL",
-      "RBAC",
+      "PostgreSQL + Prisma",
+      "Auth.js",
+      "Stockfish (WASM, Web Worker)",
+      "chess.js",
+      "Vercel AI SDK",
+      "Python (polars, LightGBM, FAISS)",
+      "FastAPI",
     ],
     highlights: [
-      "Built admin/stylist/customer dashboards with RBAC-protected routes.",
-      "Prevented double-bookings via server-side conflict checks.",
-      "Unified booking + gallery + management into a single deployable app.",
-    ],
-    links: {
-      demo: "https://example.com",
-      repo: "https://github.com/you/salon-booking",
-    },
-    details: {
-      problem:
-        "Salon needed a single system for bookings, galleries, and role-separated workflows.",
-      architecture:
-        "Server actions for mutations, Prisma for data layer, PostgreSQL schema enforcing consistency.",
-      decisions: [
-        "Chose Next.js to consolidate FE/BE and deployment.",
-        "Added RBAC early to avoid privilege leakage during feature growth.",
-      ],
-    },
-    media: { thumbnail: "/images/salon.png" },
-  },
-
-  {
-    slug: "Reservation-App",
-    title: "Reservation Web App",
-    oneLiner: "A brief description of project two.",
-    stack: ["Next.js", "TypeScript", "Tailwind CSS"],
-    highlights: [
-      "Modern UI/UX design for seamless user experience.",
-      "Form validation and error handling implemented.",
-      "Admin dashboard for managing reservations.",
-    ],
-    links: {
-      demo: "https://studio-reservation-seven.vercel.app/",
-      repo: "https://github.com/EmmanuelAbebe/StudioReservation/",
-    },
-    details: {
-      problem: "Reserve a time and space efficiently.",
-      architecture: "frontend with Next.js and backend integration.",
-      decisions: [
-        "utilizing Prisma for data modeling",
-        "chose Next.js for SSR.",
-      ],
-    },
-    media: { thumbnail: "/images/project2.png" },
-  },
-  {
-    slug: "AI Chess app",
-    title: "AI Chess app",
-    oneLiner: "An AI-powered chess application with real-time gameplay.",
-    stack: ["React", "TypeScript", "Node.js", "TensorFlow.js"],
-    highlights: [
-      "Implemented AI opponent with neural network training.",
-      "Built real-time multiplayer chess experience.",
-      "Integrated responsive UI with smooth animations.",
+      "Runs Stockfish in a Web Worker; move quality (best → blunder) is computed deterministically from eval swings, never by the LLM.",
+      "Streaming coach endpoint with tool calls that annotate squares and arrows on the board; users bring their own OpenAI / Anthropic / Gemini / Groq key.",
+      "Offline Python pipeline over the Lichess open database builds style + skill profiles; a FastAPI service matches a user to similar, stronger players.",
+      "Imports games from Lichess and Chess.com; Auth.js + Prisma accounts, profiles, and game history.",
     ],
     links: {
       demo: "https://chessapp-five.vercel.app/",
       repo: "https://github.com/EmmanuelAbebe/chessapp",
     },
     details: {
-      problem: "Create an engaging chess experience with intelligent AI.",
+      problem:
+        "Engines say a move was bad but not why, and they know nothing about the player's habits. General-purpose chatbots explain fluently but get chess facts wrong.",
       architecture:
-        "Frontend with React and TypeScript, backend with Node.js and TensorFlow.js.",
+        "The browser runs Stockfish and chess.js to produce evaluations and move classifications. /api/coach sends those facts, plus a summary of the player's stored profile, to the selected LLM and streams the explanation back. /api/player-profile fetches the user's games and calls a separate Python FastAPI service, backed by an offline pipeline (ingest → features → engine labels → models → player vectors), to build the profile stored in PostgreSQL.",
       decisions: [
-        "Chose React for its component-based architecture.",
-        "Utilized TensorFlow.js for on-device machine learning.",
+        "The engine decides, the LLM only phrases: classification happens before the model is called, so it can't invent a wrong evaluation.",
+        "Engine analysis runs client-side, so it costs no server compute and needs no network round trip per move.",
+        "All user-supplied API keys pass through one server function and are never logged.",
+        "Pipeline ingest streams compressed monthly dumps without storing them and checkpoints so it can resume; the expensive Stockfish labelling stage runs on a cloud spot VM.",
       ],
     },
-    media: { thumbnail: "/images/ai-chess.png" },
+  },
+
+  {
+    slug: "studio-reservation",
+    title: "Studio Reservation App",
+    oneLiner:
+      "Hourly booking for a recording studio: pick a package and time slot, then pay.",
+    note: "In progress: the front end is finished and live; payments and persistence are on a feature branch.",
+    stack: [
+      "Next.js",
+      "TypeScript",
+      "Tailwind CSS",
+      "PostgreSQL + Prisma",
+      "Stripe (Payment Intents + webhooks)",
+      "Zod",
+    ],
+    highlights: [
+      "My most polished UI: responsive, mobile-first booking flow with pricing packages, calendar strip, time-slot grid, and live booking summary.",
+      "Reservation schema tracks a full payment lifecycle (REQUIRES_PAYMENT → PAID → CONFIRMED / REFUNDED / DISPUTED).",
+      "Stripe webhook verifies signatures and updates reservation status from payment events.",
+    ],
+    links: {
+      demo: "https://studio-reservation-seven.vercel.app/",
+      repo: "https://github.com/EmmanuelAbebe/StudioReservation",
+    },
+    details: {
+      problem:
+        "A small studio took bookings by phone and text, which caused double-bookings and unpaid no-shows.",
+      architecture:
+        "The client builds a reservation draft (package, studio, slot). The server validates it with Zod, inserts a REQUIRES_PAYMENT reservation, and creates a Stripe PaymentIntent. The Stripe webhook then marks the reservation PAID or FAILED.",
+      decisions: [
+        "Reserve the slot before charging: a unique slotKey makes the second request for the same slot fail with 409 instead of double-charging.",
+        "Snapshot customer contact info and package on the reservation instead of relying on the User row.",
+        "Webhook, not client redirect, is the source of truth for payment status.",
+      ],
+    },
+  },
+
+  {
+    slug: "salon-booking",
+    title: "Salon Booking & Management System",
+    oneLiner:
+      "Customer booking plus a role-protected staff/admin dashboard for a hair salon.",
+    note: "In progress: backend and admin dashboard built; not yet deployed.",
+    stack: [
+      "Next.js (App Router)",
+      "TypeScript",
+      "PostgreSQL + Prisma",
+      "Session auth + RBAC",
+      "Tailwind CSS",
+    ],
+    highlights: [
+      "Three-step booking flow (services → date & time → confirm) backed by a live availability API.",
+      "Availability computed from each stylist's weekly hours, breaks, and existing appointments.",
+      "Server-side overlap check rejects double-bookings; customer + appointment are created in one transaction.",
+      "Admin dashboard for appointments, staff, clients, services, and revenue, gated by role (STAFF < ADMIN).",
+    ],
+    links: {
+      repo: "https://github.com/EmmanuelAbebe/Hiarsalon",
+    },
+    details: {
+      problem:
+        "A salon was managing bookings, stylist schedules, and client records across separate manual tools, with no separation between staff and admin access.",
+      architecture:
+        "Next.js route handlers under /api/booking and /api/admin sit on a Prisma data layer over PostgreSQL. The schema models services, staff, weekly hours and breaks, customers, and appointments. Appointment line items snapshot service name, duration, and price so later price changes don't rewrite history. Middleware redirects unauthenticated dashboard requests; each admin handler re-checks the DB-backed session and role.",
+      decisions: [
+        "Chose DB-backed session tokens over JWTs so deactivating a user takes effect immediately.",
+        "Checked roles in every handler, not just middleware, so a missed route can't leak admin data.",
+        "Stored times as minutes-from-midnight per weekday for staff hours, which keeps availability math simple.",
+        "Known limitation: the overlap check runs just before the insert transaction, not inside it; an exclusion constraint would close the remaining race.",
+      ],
+    },
   },
 ];
-
-// export const projectData: Project[] = [
-//   {
-//     thumbnail: null,
-//     title: "Full-Stack Booking & Management System",
-//     description: {
-//       problemStatement: (
-//         <p>
-//           A hair salon required a centralized system to manage customer
-//           bookings, showcase stylist work, and handle appointment operations
-//           securely. Existing tools were fragmented, manual, and did not support
-//           role-based workflows for staff versus administrators.
-//         </p>
-//       ),
-
-//       techstack: (
-//         <ul className="list-disc pl-5">
-//           <li>Next.js (App Router)</li>
-//           <li>React + TypeScript</li>
-//           <li>Prisma ORM</li>
-//           <li>PostgreSQL</li>
-//           <li>Server Actions / API Routes</li>
-//           <li>Authentication & RBAC</li>
-//         </ul>
-//       ),
-
-//       architecture: (
-//         <p>
-//           The application follows a full-stack Next.js architecture with server
-//           components handling data fetching and mutations. Prisma acts as the
-//           data access layer between the application and PostgreSQL.
-//           Authentication and role-based access control gate dashboard routes,
-//           separating admin, stylist, and customer permissions. Public-facing
-//           pages render stylist galleries and availability, while protected
-//           dashboards manage bookings and schedules.
-//         </p>
-//       ),
-
-//       decisions: (
-//         <p>
-//           Next.js was chosen to unify frontend and backend concerns and reduce
-//           deployment complexity. Prisma was selected for type-safe database
-//           access and schema migrations. Role-based access control was
-//           implemented early to prevent privilege leakage as features scaled. The
-//           data model prioritizes appointment consistency and conflict prevention
-//           over flexibility.
-//         </p>
-//       ),
-//     },
-//     githubLink: "repo-name-1",
-//     demolink: "https://example.com",
-//   },
-//   {
-//     thumbnail: null,
-//     title: "project-2",
-//     description: {
-//       problemStatement: "content here",
-//       techstack: "content here",
-//       architecture: "content here",
-//       decisions: "content here",
-//     },
-//     githubLink: "repo-name-2",
-//     demolink: "https://example.com",
-//   },
-//   {
-//     thumbnail: null,
-//     title: "project-3",
-//     description: {
-//       problemStatement: "content here",
-//       techstack: "content here",
-//       architecture: "content here",
-//       decisions: "content here",
-//     },
-//     githubLink: "repo-name-3",
-//     demolink: "https://example.com",
-//   },
-// ];

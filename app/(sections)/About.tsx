@@ -13,15 +13,20 @@ import {
   FaFlask,
   FaGithub,
   FaLinkedin,
+  FaLinux,
+  FaDatabase,
 } from "react-icons/fa";
-import { MdArrowRight } from "react-icons/md";
 import { RiNextjsLine } from "react-icons/ri";
 import {
   SiTypescript,
+  SiJavascript,
   SiPostgresql,
   SiPrisma,
   SiSqlalchemy,
   SiFastapi,
+  SiTailwindcss,
+  SiVercel,
+  SiStripe,
 } from "react-icons/si";
 
 type Skill = {
@@ -38,11 +43,21 @@ type Group = {
 
 const GROUPS: Group[] = [
   {
+    title: "Languages",
+    items: [
+      { label: "TypeScript", Icon: SiTypescript, emphasis: true },
+      { label: "JavaScript", Icon: SiJavascript },
+      { label: "Python", Icon: FaPython },
+      { label: "SQL", Icon: FaDatabase },
+      { label: "Java", Icon: FaJava, note: "coursework" },
+    ],
+  },
+  {
     title: "Frontend",
     items: [
       { label: "React", Icon: FaReact, emphasis: true },
       { label: "Next.js", Icon: RiNextjsLine, emphasis: true },
-      { label: "TypeScript", Icon: SiTypescript, emphasis: true },
+      { label: "Tailwind CSS", Icon: SiTailwindcss },
       { label: "HTML", Icon: FaHtml5 },
       { label: "CSS", Icon: FaCss3 },
     ],
@@ -51,17 +66,16 @@ const GROUPS: Group[] = [
     title: "Backend",
     items: [
       { label: "Node.js", Icon: FaNodeJs },
-      { label: "Python", Icon: FaPython },
-      { label: "Flask", Icon: FaFlask },
       { label: "FastAPI", Icon: SiFastapi },
-      { label: "Java", Icon: FaJava, note: "coursework + projects" },
+      { label: "Flask", Icon: FaFlask },
+      { label: "Stripe API", Icon: SiStripe },
     ],
   },
   {
     title: "Data",
     items: [
       { label: "PostgreSQL", Icon: SiPostgresql, emphasis: true },
-      { label: "Prisma", Icon: SiPrisma },
+      { label: "Prisma", Icon: SiPrisma, emphasis: true },
       { label: "SQLAlchemy", Icon: SiSqlalchemy },
     ],
   },
@@ -69,7 +83,9 @@ const GROUPS: Group[] = [
     title: "Tooling",
     items: [
       { label: "Git", Icon: FaGitAlt },
+      { label: "Linux", Icon: FaLinux },
       { label: "Docker", Icon: FaDocker },
+      { label: "Vercel", Icon: SiVercel },
     ],
   },
 ];
@@ -80,7 +96,7 @@ function SkillPill({ label, Icon, emphasis, note }: Skill) {
     : "text-slate-400 group-hover:text-indigo-600";
 
   const pillClass =
-    "group inline-flex items-center gap-2 rounded-md border border-slate-200 bg-white px-3 py-2 cursor-pointer" +
+    "group inline-flex items-center gap-2 rounded-md border border-slate-200 bg-white px-3 py-2 " +
     "transition-colors duration-150 hover:border-indigo-300";
 
   return (
@@ -122,23 +138,25 @@ export default function About() {
       {/* Summary */}
       <div className="space-y-3">
         <p className="font-mono text-sm leading-6 text-slate-700">
-          Emmanuel Abebe — junior software engineer focused on React/Next.js and
-          building maintainable UI with clean data flows.
+          Junior software engineer building full-stack TypeScript apps: Next.js
+          front ends, typed API routes, PostgreSQL schemas, and auth.
         </p>
         <ul className="font-mono text-sm leading-6 list-disc text-slate-700 ps-5 space-y-3">
           <li className="m-1 p-2">
-            Built full-stack web apps with typed APIs, database schemas, and
-            CRUD workflows.
+            Latest project: an AI chess coach that runs Stockfish in the
+            browser, explains mistakes with an LLM, and profiles players with
+            a Python ML pipeline.
           </li>
           <li className="m-1 p-2">
-            Implemented interactive UI features (state, navigation, edge cases)
-            with performance in mind.
+            Built booking systems with availability logic, double-booking
+            prevention, role-based admin dashboards, and Stripe payments.
           </li>
         </ul>
         <div className="font-mono text-sm flex-wrap leading-6 text-slate-700 py-2 flex gap-2">
           <span className="font-semibold text-indigo-500">Target roles</span>
           <span className="w-full ps-8">
-            Frontend or full-stack (React, Next.js, TypeScript, PostgreSQL).
+            Junior full-stack or frontend engineer (React, Next.js, TypeScript,
+            PostgreSQL).
           </span>
         </div>
       </div>
@@ -166,20 +184,15 @@ export default function About() {
         </div>
       </div>
 
-      {/* Proof (replace with real specifics) */}
+      {/* Education */}
       <div className="space-y-3">
         <p className="font-mono font-semibold border-b border-gray-300 py-2 text-slate-900">
-          Proof
+          Education
         </p>
-        <ul className="font-mono text-sm leading-6 list-disc text-slate-700 ps-5 space-y-3">
-          <li className="m-1 p-2">
-            Live demos deployed for projects; source code available on GitHub.
-          </li>
-          <li className="m-1 p-2">
-            Each project documents architecture, tradeoffs, and implementation
-            details.
-          </li>
-        </ul>
+        <div className="font-mono text-sm leading-6 text-slate-700 ps-8">
+          <p className="font-semibold">B.S. Computer Science, 2025</p>
+          <p>University of Maryland Global Campus</p>
+        </div>
       </div>
     </div>
   );

@@ -12,9 +12,17 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const description =
+  "Junior software engineer building full-stack TypeScript apps with React, Next.js, and PostgreSQL.";
+
 export const metadata: Metadata = {
-  title: "Emmanuel Abebe",
-  description: "Portfolio",
+  title: "Emmanuel Abebe | Junior Software Engineer",
+  description,
+  openGraph: {
+    title: "Emmanuel Abebe | Junior Software Engineer",
+    description,
+    type: "website",
+  },
 };
 
 export default function RootLayout({

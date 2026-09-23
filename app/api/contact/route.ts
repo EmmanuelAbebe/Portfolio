@@ -28,17 +28,18 @@ function getEnv() {
 }
 
 function getRatelimiter() {
-  // Upstash envs are also required; if missing, disable rate limiting safely.
-  try {
-    const redis = Redis.fromEnv();
-    return new Ratelimit({
-      redis,
-      limiter: Ratelimit.slidingWindow(5, "60 s"),
-      analytics: true,
-    });
-  } catch {
+  // Rate limiting is optional: only enabled when Upstash is configured.
+  if (
+    !process.env.UPSTASH_REDIS_REST_URL ||
+    !process.env.UPSTASH_REDIS_REST_TOKEN
+  ) {
     return null;
   }
+  return new Ratelimit({
+    redis: Redis.fromEnv(),
+    limiter: Ratelimit.slidingWindow(5, "60 s"),
+    analytics: true,
+  });
 }
 
 async function verifyTurnstile(secret: string, token: string, ip?: string) {
@@ -64,6 +65,7 @@ export async function POST(req: NextRequest) {
   try {
     const env = getEnv();
     if (!env) {
+      console.error("[contact] missing env vars for Resend/Turnstile");
       return NextResponse.json(
         { ok: false, error: "server_misconfigured" },
         { status: 500 }
@@ -74,7 +76,15 @@ export async function POST(req: NextRequest) {
 
     const ratelimit = getRatelimiter();
     if (ratelimit) {
-      const { success } = await ratelimit.limit(`contact:${ip}`);
+      // Fail open: a Redis outage shouldn't block real messages
+      // (Turnstile still stops bots).
+      const success = await ratelimit
+        .limit(`contact:${ip}`)
+        .then((r) => r.success)
+        .catch((err) => {
+          console.error("[contact] rate limiter unavailable", err);
+          return true;
+        });
       if (!success) {
         return NextResponse.json(
           { ok: false, error: "rate_limited" },
@@ -83,26 +93,25 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    const body = await req.json().catch(() => null);
+    const body: unknown = await req.json().catch(() => null);
     if (!body || typeof body !== "object") {
       return NextResponse.json(
         { ok: false, error: "invalid_json" },
         { status: 400 }
       );
     }
+    const fields = body as Record<string, unknown>;
+    const field = (key: string) => String(fields[key] ?? "").trim();
 
     // Honeypot
-    if (
-      typeof (body as any).company === "string" &&
-      (body as any).company.trim().length > 0
-    ) {
+    if (field("company").length > 0) {
       return NextResponse.json({ ok: true });
     }
 
-    const name = String((body as any).name ?? "").trim();
-    const contactRaw = String((body as any).contact ?? "").trim();
-    const message = String((body as any).message ?? "").trim();
-    const token = String((body as any).turnstileToken ?? "").trim();
+    const name = field("name");
+    const contactRaw = field("contact");
+    const message = field("message");
+    const token = field("turnstileToken");
 
     if (!name || !contactRaw || !message || !token) {
       return NextResponse.json(
@@ -128,16 +137,25 @@ export async function POST(req: NextRequest) {
     const resend = new Resend(env.RESEND_API_KEY);
     const contact = contactRaw.trim();
 
-    await resend.emails.send({
+    // Resend reports failures in the result instead of throwing.
+    const { error } = await resend.emails.send({
       from: env.FROM,
       to: env.TO,
       subject: `Portfolio contact from ${name}`,
       text: `Name: ${name}\nContact: ${contact}\nIP: ${ip}\n\n${message}`,
       ...(isLikelyEmail(contact) ? { replyTo: contact } : {}),
     });
+    if (error) {
+      console.error("[contact] resend failed", error);
+      return NextResponse.json(
+        { ok: false, error: "send_failed" },
+        { status: 502 }
+      );
+    }
 
     return NextResponse.json({ ok: true });
-  } catch {
+  } catch (err) {
+    console.error("[contact] unexpected error", err);
     return NextResponse.json(
       { ok: false, error: "server_error" },
       { status: 500 }

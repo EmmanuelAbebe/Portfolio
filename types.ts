@@ -1,11 +1,10 @@
 import { ReactNode } from "react";
 
-export type SectionId = "about" | "projects" | "resume" | "contacts";
+export type SectionId = "about" | "projects" | "contacts";
 
 export const SECTIONS: { id: SectionId; label: string }[] = [
   { id: "about", label: "About" },
   { id: "projects", label: "Projects" },
-  { id: "resume", label: "Resume" },
   { id: "contacts", label: "Contacts" },
 ];
 
@@ -27,13 +26,6 @@ export type AccordionGroupProps = {
   collapsible?: boolean; // allow closing the currently open item
 };
 
-export type CarouselProps<T> = {
-  items: readonly T[];
-  render: (item: T) => React.ReactNode;
-  ariaLabel?: string;
-  controlsVisible?: boolean;
-};
-
 export type SectionProps = {
   id: string;
   title: string;
@@ -47,6 +39,7 @@ export type Project = {
   oneLiner: string;
   stack: string[];
   highlights: string[]; // 2–4 bullets, outcome-focused
+  note?: string; // honest status, e.g. what the demo does/doesn't cover
   links: {
     demo?: string;
     repo?: string;
